@@ -1,0 +1,1 @@
+gcc devBuild -o main.c hashUtil.c
