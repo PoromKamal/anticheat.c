@@ -1,6 +1,6 @@
 CFLAGS=-lssl -lcrypto
 anticheat-dev: main.o anticheat.o hashUtil.o
-	gcc -o anticheat main.o anticheat.o hashUtil.o $(CFLAGS)
+	gcc -o anticheat-dev main.o anticheat.o hashUtil.o $(CFLAGS)
 
 anticheat.o: anticheat.c
 	gcc -c -o anticheat.o anticheat.c
