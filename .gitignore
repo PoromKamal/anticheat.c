@@ -5,7 +5,8 @@
 #Test verification files
 verification.txt
 
-#Built output files
+#dev exec files
+anticheat-dev
 
 # Object files
 *.o

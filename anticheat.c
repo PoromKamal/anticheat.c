@@ -4,6 +4,7 @@
 #include <string.h>
 #include "anticheat.h"
 #include "hashUtil.h"
+#define VERIFICATION_FILE "verification.txt"
 
 void appOptions(int argc, char** argv, AppOptions* appOptions){
     if(argc < 2){
@@ -23,12 +24,11 @@ void appOptions(int argc, char** argv, AppOptions* appOptions){
 }
 
 void generate(char *gameDir){
-    hash_dir(gameDir, "verification.txt");
-    return;
+    hash_dir(gameDir, VERIFICATION_FILE);
 }
 
 bool verify(char *gameDir){
-    return false;
+    return compare_hashes(gameDir, VERIFICATION_FILE);
 }
 
 void start(AppOptions* appOptions){
@@ -37,6 +37,11 @@ void start(AppOptions* appOptions){
     }
     else if(appOptions->mode == VERIFY){
         bool verificationResult = verify(appOptions->gameDir);
+        if(verificationResult){ //Temporary solution for development, use signals later
+            printf("Verification successful\n");
+        } else {
+            printf("Verification failed\n");
+        }
     } else {
         perror("Invalid mode\n");
         exit(1);

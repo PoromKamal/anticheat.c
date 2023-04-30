@@ -86,5 +86,49 @@ void hash_dir(char* dirName, char* outputFile){
 Return true if they match
 Return false if they do not match
 */
-bool compare_hashes(char* verificationFile, char* game_dir){
+bool compare_hashes(char* game_dir, char* verificationFile){
+    //Open the verification file
+    FILE *fp = fopen(verificationFile, "r");
+    if(fp == NULL){
+        perror("Could not open verification file\n");
+        exit(1);
+    }
+    //Iterate through the verification file
+    char *line = (char*)calloc(1024, sizeof(char));
+    //Iterate through every line in the verification file, and compare hashes with fgets
+    while(fgets(line, 1024, fp) != NULL){
+        //Get the filename, and expected hash from the line
+        char *filename = strtok(line, "::");
+        char *expectedHash = strtok(NULL, "::");
+        //Remove trailing newline from expected hash
+        expectedHash[strcspn(expectedHash, "\n")] = 0;
+
+        //Create the full path to the file
+        char *fullPath = (char*)calloc(strlen(game_dir)+strlen(filename)+2, sizeof(char));
+        strcat(fullPath, game_dir);
+        strcat(fullPath, "/");
+        strcat(fullPath, filename);
+        //Hash the file
+        char *hash = hash_file(fullPath);
+        printf("file: %s, hash: %s, expected: %s\n", fullPath, hash, expectedHash);
+        //Compare the hashes
+        if(strcmp(hash, expectedHash) != 0){
+            //Free memory
+            free(fullPath);
+            free(hash);
+            free(line);
+            //Close the verification file
+            fclose(fp);
+            //Return false if the hashes do not match
+            return false;
+        }
+        //Free memory
+        free(fullPath);
+        free(hash);
+    }
+    free(line);
+    //Close the verification file
+    fclose(fp);
+    //Return true if all hashes match
+    return true;
 }
