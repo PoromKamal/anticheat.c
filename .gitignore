@@ -2,6 +2,11 @@
 # Prerequisites
 *.d
 
+#Test verification files
+verification.txt
+
+#Built output files
+
 # Object files
 *.o
 *.ko

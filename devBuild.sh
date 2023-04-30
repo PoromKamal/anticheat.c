@@ -1,1 +1,0 @@
-gcc anticheat -o main.c hashUtil.c anticheat.c
