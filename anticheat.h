@@ -9,4 +9,5 @@ typedef struct AppOptions{
 }AppOptions;
 //Create a AppOptions struct with arguments passed by the user
 void appOptions(int argc, char** argv, AppOptions* appOptions);
+void start(AppOptions* appOptions); 
 #endif

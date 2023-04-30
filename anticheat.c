@@ -1,7 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "anticheat.h"
 #include <stdbool.h>
+#include <string.h>
+#include "anticheat.h"
+#include "hashUtil.h"
 
 void appOptions(int argc, char** argv, AppOptions* appOptions){
     if(argc < 2){
@@ -21,6 +23,7 @@ void appOptions(int argc, char** argv, AppOptions* appOptions){
 }
 
 void generate(char *gameDir){
+    hash_dir(gameDir, "verification.txt");
     return;
 }
 
