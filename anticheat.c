@@ -25,6 +25,7 @@ void appOptions(int argc, char** argv, AppOptions* appOptions){
 
 void generate(char *gameDir){
     hash_dir(gameDir, VERIFICATION_FILE);
+    //Test rebasing
 }
 
 bool verify(char *gameDir){
