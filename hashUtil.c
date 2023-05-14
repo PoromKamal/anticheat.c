@@ -110,13 +110,14 @@ bool compare_hashes(char* game_dir, char* verificationFile){
         strcat(fullPath, filename);
         //Hash the file
         char *hash = hash_file(fullPath);
-        printf("file: %s, hash: %s, expected: %s\n", fullPath, hash, expectedHash);
+        //printf("file: %s, hash: %s, expected: %s\n", fullPath, hash, expectedHash);
         //Compare the hashes
         if(strcmp(hash, expectedHash) != 0){
             //Free memory
             free(fullPath);
             free(hash);
             free(line);
+            printf("");
             //Close the verification file
             fclose(fp);
             //Return false if the hashes do not match
