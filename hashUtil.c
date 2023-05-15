@@ -125,6 +125,8 @@ bool compare_hashes(char* game_dir, char* verificationFile){
         if(strcmp(hash, expectedHash) != 0){
             failingFileNames[failedFileNameIdx] = fullPath;
             failedFileNameIdx++;
+        } else{
+            free(fullPath);
         }
         //Free memory
         free(hash);
