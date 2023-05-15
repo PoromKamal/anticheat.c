@@ -5,6 +5,7 @@
 #include <openssl/md5.h>
 #include <dirent.h>
 #include "hashUtil.h"
+#define MAX_FILE_PATH 256
 
 // This function is used to generate a hash for a file
 char* hash_file(char* filename){
@@ -76,6 +77,7 @@ void hash_dir(char* dirName, char* outputFile){
         free(fullPath);
         free(hash);
     }
+    fprintf(fp, "===\n");
     //Close the directory
     closedir(dir);
     //Close the output file
@@ -96,7 +98,14 @@ bool compare_hashes(char* game_dir, char* verificationFile){
     //Iterate through the verification file
     char *line = (char*)calloc(1024, sizeof(char));
     //Iterate through every line in the verification file, and compare hashes with fgets
-    while(fgets(line, 1024, fp) != NULL){
+    int length=0;
+    while(fgets(line, 1024, fp) != NULL && strcmp(line, "===\n") != 0){
+        length++;
+    }
+    rewind(fp);
+    int failedFileNameIdx=0;
+    char **failingFileNames=(char**)calloc(length,sizeof(char));
+    while(fgets(line, 1024, fp) != NULL && strcmp(line, "===\n") != 0){
         //Get the filename, and expected hash from the line
         char *filename = strtok(line, "::");
         char *expectedHash = strtok(NULL, "::");
@@ -108,27 +117,52 @@ bool compare_hashes(char* game_dir, char* verificationFile){
         strcat(fullPath, game_dir);
         strcat(fullPath, "/");
         strcat(fullPath, filename);
+
         //Hash the file
         char *hash = hash_file(fullPath);
-        printf("file: %s, hash: %s, expected: %s\n", fullPath, hash, expectedHash);
+        //printf("file: %s, hash: %s, expected: %s\n", fullPath, hash, expectedHash);
         //Compare the hashes
         if(strcmp(hash, expectedHash) != 0){
-            //Free memory
+            failingFileNames[failedFileNameIdx] = fullPath;
+            failedFileNameIdx++;
+        } else{
             free(fullPath);
-            free(hash);
-            free(line);
-            //Close the verification file
-            fclose(fp);
-            //Return false if the hashes do not match
-            return false;
         }
         //Free memory
-        free(fullPath);
         free(hash);
     }
+
+    //If any files failed
+    if(failedFileNameIdx > 0){
+        char *failedOutputFileName="VerificationFailed.txt";
+        FILE *failedOutputFile=fopen(failedOutputFileName, "w");
+        if (failedOutputFile==NULL){
+            printf("Error opening file %s", failedOutputFileName);
+    
+        }
+        else
+        {
+            fprintf(failedOutputFile, "List of Failed Files:\n==========================\n");
+            for (int i=0;i<failedFileNameIdx;i++){
+                fprintf(failedOutputFile, "%s\n", failingFileNames[i]);
+            }
+            fclose(failedOutputFile);
+        }
+        
+    }
+
+    for(int i = 0; i < failedFileNameIdx; i ++){
+        free(failingFileNames[i]);
+    }
+
+    free(failingFileNames);
     free(line);
-    //Close the verification file
+    //Close the verification filehow to 
     fclose(fp);
-    //Return true if all hashes match
-    return true;
+
+    //Return true iff all hashes match
+    return failedFileNameIdx > 0 ?  false : true; 
 }
+
+//char* string = "Hisdfasdlgkhnasolg;na;dlsfngalksg"
+//printf(string); "Hisdfsdvsdfgsgasdgsdg"
