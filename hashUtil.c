@@ -136,14 +136,17 @@ bool compare_hashes(char* game_dir, char* verificationFile){
         FILE *failedOutputFile=fopen(failedOutputFileName, "w");
         if (failedOutputFile==NULL){
             printf("Error opening file %s", failedOutputFileName);
+    
         }
-
-        fprintf(failedOutputFile, "List of Failed Files:\n==========================\n");
-        for (int i=0;i<failedFileNameIdx;i++){
-            fprintf(failedOutputFile, "%s\n", failingFileNames[i]);
+        else
+        {
+            fprintf(failedOutputFile, "List of Failed Files:\n==========================\n");
+            for (int i=0;i<failedFileNameIdx;i++){
+                fprintf(failedOutputFile, "%s\n", failingFileNames[i]);
+            }
+            fclose(failedOutputFile);
         }
         
-        fclose(failedOutputFile);
     }
 
     for(int i = 0; i < failedFileNameIdx; i ++){
