@@ -8,11 +8,11 @@ fi
 if [ $1 == "-v" ]
 then
     echo "Running time benchmark for verifying files."
-    time ./anticheat-dev testGame -v
+    time ./anticheat-dev benchmarkTests -v
 elif [ $1 == "-g" ]
 then
     echo "Running time benchmark for generating files."
-    time ./anticheat-dev testGame -g
+    time ./anticheat-dev benchmarkTests -g
 else
     echo "Invalid argument"
     exit 1

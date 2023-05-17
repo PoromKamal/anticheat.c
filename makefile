@@ -14,6 +14,6 @@ hashUtil.o: hashUtil.c
 .PHONY: clean
 clean:
 	rm -f *.o
-	rm -f anticheat
+	rm -f anticheat-dev
 
 

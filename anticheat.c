@@ -55,13 +55,13 @@ void start(AppOptions* appOptions){
     }
 }
 
-//Creates a test directory for testing purposes, with 100 files, with 6600 bytes each
+//Creates a test directory for testing purposes, with 100 files, with 10 mb each
 void create_test_dir(char* dir_name){
     char command[100];
     sprintf(command, "mkdir %s", dir_name);
     system(command);
-    for(int i = 0; i < 100; i++){
-        sprintf(command, "dd if=/dev/urandom of=%s/file%d bs=6600 count=1", dir_name, i);
+    for(int i = 0; i < 150; i++){
+        sprintf(command, "dd if=/dev/urandom of=%s/file%d bs=5M count=1", dir_name, i);
         system(command);
     }
 }
