@@ -9,7 +9,8 @@
 void appOptions(int argc, char** argv, AppOptions* appOptions){
     if(argc < 2){
         perror("Usage:\n anticheat <game directory> -v(for verifying game files)"
-                "\nanticheat <game directory> -g(For generating verification files)\n");
+                "\nanticheat <game directory> -g(For generating verification files)\n"
+                "\nanticheat <game directory> -t DEV_KEY(For creating test directory, for dev purposes)\n");
         exit(1);
     }
     appOptions->gameDir = argv[1];
@@ -19,8 +20,11 @@ void appOptions(int argc, char** argv, AppOptions* appOptions){
         }
         else if(strcmp(argv[i], "-g") == 0){
             appOptions->mode = GENERATE;
+        } else if(strcmp(argv[i], "-t") == 0){
+            appOptions->mode = TEST;
         }
     }
+    //test rebasing, hello nehal
 }
 
 void generate(char *gameDir){
@@ -43,8 +47,21 @@ void start(AppOptions* appOptions){
         } else {
             printf("Verification failed\n");
         }
+    } else if(appOptions->mode == TEST){
+        create_test_dir("benchmarkTests");
     } else {
         perror("Invalid mode\n");
         exit(1);
+    }
+}
+
+//Creates a test directory for testing purposes, with 100 files, with 10 mb each
+void create_test_dir(char* dir_name){
+    char command[100];
+    sprintf(command, "mkdir %s", dir_name);
+    system(command);
+    for(int i = 0; i < 150; i++){
+        sprintf(command, "dd if=/dev/urandom of=%s/file%d bs=5M count=1", dir_name, i);
+        system(command);
     }
 }
