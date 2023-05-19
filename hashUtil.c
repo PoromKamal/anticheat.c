@@ -39,8 +39,41 @@ char* hash_file(char* filename){
 }
 
 // Hash every file in this directory, and write output to a file output
-void hash_dir(char* dirName, char* outputFile){
-    //Open the directory
+////////////////////////////////////////////////////////////////////////////////////////////
+void hash_dir2(int argc, char** argv, char* dirName, char* outputFile){
+    
+    printf("hashdir2\n");
+    FILE *igf_file = fopen(argv[4], "r");
+    if(igf_file == NULL){
+        perror("Could not open file\n");
+        exit(1);
+        }
+    int igf_lines = 0;
+    char* line = (char*)calloc(1024, sizeof(char));
+    while(fgets(line, 1024, igf_file) != NULL && strcmp(line, "===\n") != 0){
+        igf_lines++;
+    }
+    char **igf_filenames = (char**)calloc(igf_lines,sizeof(char*));
+    rewind(igf_file);
+
+    int igf_counter = 0;
+    while (fgets(line, 1024, igf_file) != NULL && strcmp(line, "===\n") != 0) {
+
+        if (line[0]=="===\n") {
+            continue;
+        }
+        igf_filenames[igf_counter] = strdup(line);
+        int curr_filelen = strlen(igf_filenames[igf_counter]);
+        igf_filenames[igf_counter][curr_filelen-1] = '\0'; 
+        igf_counter ++;
+        printf(igf_filenames[igf_lines] ,"\n");
+    }
+    for (int i=0;i<igf_lines;i++){
+       printf(igf_filenames[i] ,"\n");
+        
+    }
+    fclose(igf_file);
+    
     DIR *dir = opendir(dirName);
     if(dir == NULL){
         perror("Could not open directory\n");
@@ -56,8 +89,97 @@ void hash_dir(char* dirName, char* outputFile){
 
     //Iterate through the directory
     struct dirent *entry;
+    int c=0;
     while((entry = readdir(dir)) != NULL){
         //Ignore the current directory, and parent directory
+        // if(strcmp(entry->d_name, argv[3]) != 0){
+        //     printf("%s \n",entry->d_name);
+        // }
+        
+        for (int i=0;i<argc;i++) {
+             if (strcmp(entry->d_name, argv[i]) == 0){   
+                c=1;
+                 break; 
+                 }
+        }
+
+        for (int i=0;i<igf_lines;i++) {
+            printf("%s",igf_filenames[i]);
+            if (strcmp(entry->d_name, igf_filenames[i]) == 0){   
+                c=1;
+                break; 
+            }
+        }
+
+        if (c == 1){
+            c = 0;
+            continue;
+        }
+        if(strcmp(entry->d_name, ".") == 0 || strcmp(entry->d_name, "..") == 0){
+            continue;
+        }
+        //Create the full path to the file
+        char *fullPath = (char*)calloc(strlen(dirName)+strlen(entry->d_name)+2, sizeof(char));
+        strcat(fullPath, dirName);
+        strcat(fullPath, "/");
+        strcat(fullPath, entry->d_name);
+
+        //Hash the file
+        char *hash = hash_file(fullPath);
+
+        //Write the hash to the output file with the form-> filename::expectedhash
+        fprintf(fp, "%s::%s\n", entry->d_name, hash);
+
+        //Free memory
+        free(fullPath);
+        free(hash);
+    }
+    fprintf(fp, "===\n");
+    //Close the directory
+    closedir(dir);
+    //Close the output file
+    fclose(fp);
+}
+    
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+void hash_dir(int argc, char** argv, char* dirName, char* outputFile){
+    //Open the directory
+    printf("hashdir\n");
+    DIR *dir = opendir(dirName);
+    if(dir == NULL){
+        perror("Could not open directory\n");
+        exit(1);
+    }
+
+    //Open the output file
+    FILE *fp = fopen(outputFile, "w");
+    if(fp == NULL){
+        perror("Could not open output file\n");
+        exit(1);
+    }
+
+    //Iterate through the directory
+    struct dirent *entry;
+    int c=0;
+    while((entry = readdir(dir)) != NULL){
+        //Ignore the current directory, and parent directory
+        // if(strcmp(entry->d_name, argv[3]) != 0){
+        //     printf("%s \n",entry->d_name);
+        // }
+        
+        for (int i=0;i<argc;i++) {
+            
+            //printf("%s %d %d \n",argv[i],argc,i);
+             if (strcmp(entry->d_name, argv[i]) == 0){   
+                //printf("%s %d %d \n",argv[i],argc,i);  
+                c=1;
+                 break; 
+                 }
+        }
+        if (c == 1){
+            c = 0;
+            continue;
+        }
         if(strcmp(entry->d_name, ".") == 0 || strcmp(entry->d_name, "..") == 0){
             continue;
         }
@@ -104,7 +226,7 @@ bool compare_hashes(char* game_dir, char* verificationFile){
     }
     rewind(fp);
     int failedFileNameIdx=0;
-    char **failingFileNames=(char**)calloc(length,sizeof(char));
+    char **failingFileNames=(char**)calloc(length,sizeof(char*));
     while(fgets(line, 1024, fp) != NULL && strcmp(line, "===\n") != 0){
         //Get the filename, and expected hash from the line
         char *filename = strtok(line, "::");

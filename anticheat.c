@@ -20,15 +20,19 @@ void appOptions(int argc, char** argv, AppOptions* appOptions){
         }
         else if(strcmp(argv[i], "-g") == 0){
             appOptions->mode = GENERATE;
-        } else if(strcmp(argv[i], "-t") == 0){
-            appOptions->mode = TEST;
+        } else if(strcmp(argv[i], "-igf")==0){
+            appOptions->mode = IGFGENERATE;
         }
     }
     //test rebasing, hello nehal
 }
 
-void generate(char *gameDir){
-    hash_dir(gameDir, VERIFICATION_FILE);
+void generate(int argc, char** argv, char *gameDir){
+    hash_dir(argc, argv, gameDir, VERIFICATION_FILE);
+    //Test rebasing
+}
+void generate2(int argc, char** argv, char *gameDir){
+    hash_dir2(argc, argv, gameDir, VERIFICATION_FILE);
     //Test rebasing
 }
 
@@ -36,9 +40,9 @@ bool verify(char *gameDir){
     return compare_hashes(gameDir, VERIFICATION_FILE);
 }
 
-void start(AppOptions* appOptions){
+void start(int argc, char** argv, AppOptions* appOptions){
     if(appOptions->mode == GENERATE){
-        generate(appOptions->gameDir);
+        generate(argc, argv, appOptions->gameDir);
     }
     else if(appOptions->mode == VERIFY){
         bool verificationResult = verify(appOptions->gameDir);
@@ -47,8 +51,8 @@ void start(AppOptions* appOptions){
         } else {
             printf("Verification failed\n");
         }
-    } else if(appOptions->mode == TEST){
-        create_test_dir("benchmarkTests");
+    } else if(appOptions->mode == IGFGENERATE){
+        generate2(argc, argv, appOptions->gameDir);
     } else {
         perror("Invalid mode\n");
         exit(1);

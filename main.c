@@ -4,6 +4,6 @@
 int main(int argc, char *argv[]){
     AppOptions options;
     appOptions(argc, argv, &options);
-    start(&options);
+    start(argc, argv,&options);
     exit(0);
 }
