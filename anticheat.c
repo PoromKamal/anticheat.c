@@ -6,7 +6,7 @@
 #include "hashUtil.h"
 #define VERIFICATION_FILE "verification.txt"
 
-void appOptions(int argc, char** argv, AppOptions* appOptions){
+void appOptions(int argc, char** argv, AppOptions* appOptions){   
     if(argc < 2){
         perror("Usage:\n anticheat <game directory> -v(for verifying game files)"
                 "\nanticheat <game directory> -g(For generating verification files)\n"
@@ -27,12 +27,8 @@ void appOptions(int argc, char** argv, AppOptions* appOptions){
     //test rebasing, hello nehal
 }
 
-void generate(int argc, char** argv, char *gameDir){
+void generate(int argc, char** argv, char *gameDir){   
     hash_dir(argc, argv, gameDir, VERIFICATION_FILE);
-    //Test rebasing
-}
-void generate2(int argc, char** argv, char *gameDir){
-    hash_dir2(argc, argv, gameDir, VERIFICATION_FILE);
     //Test rebasing
 }
 
@@ -41,7 +37,7 @@ bool verify(char *gameDir){
 }
 
 void start(int argc, char** argv, AppOptions* appOptions){
-    if(appOptions->mode == GENERATE){
+    if(appOptions->mode == GENERATE || appOptions->mode == IGFGENERATE){
         generate(argc, argv, appOptions->gameDir);
     }
     else if(appOptions->mode == VERIFY){
@@ -51,8 +47,6 @@ void start(int argc, char** argv, AppOptions* appOptions){
         } else {
             printf("Verification failed\n");
         }
-    } else if(appOptions->mode == IGFGENERATE){
-        generate2(argc, argv, appOptions->gameDir);
     } else {
         perror("Invalid mode\n");
         exit(1);
