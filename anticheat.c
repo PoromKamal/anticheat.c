@@ -13,6 +13,12 @@ void appOptions(int argc, char** argv, AppOptions* appOptions){
                 "\nanticheat <game directory> -t DEV_KEY(For creating test directory, for dev purposes)\n");
         exit(1);
     }
+    appOptions->c=argc;
+    appOptions->v = (char**)calloc(argc,(sizeof(char**)));
+    for (int i=0;i<argc;i++) {
+        appOptions->v[i] = (char*)calloc(strlen(argv[i]),(sizeof(char)));
+        strcpy(appOptions->v[i],argv[i]);
+    }
     appOptions->gameDir = argv[1];
     for(int i = 0; i < argc; i++){
         if(strcmp(argv[i], "-v") == 0){
@@ -20,15 +26,16 @@ void appOptions(int argc, char** argv, AppOptions* appOptions){
         }
         else if(strcmp(argv[i], "-g") == 0){
             appOptions->mode = GENERATE;
-        } else if(strcmp(argv[i], "-igf")==0){
+        } 
+        else if(strcmp(argv[i], "-igf")==0){
             appOptions->mode = IGFGENERATE;
         }
     }
     //test rebasing, hello nehal
 }
 
-void generate(int argc, char** argv, char *gameDir){   
-    hash_dir(argc, argv, gameDir, VERIFICATION_FILE);
+void generate(AppOptions* appOptions){   
+    hash_dir(appOptions, VERIFICATION_FILE);
     //Test rebasing
 }
 
@@ -36,9 +43,9 @@ bool verify(char *gameDir){
     return compare_hashes(gameDir, VERIFICATION_FILE);
 }
 
-void start(int argc, char** argv, AppOptions* appOptions){
+void start(AppOptions* appOptions){
     if(appOptions->mode == GENERATE || appOptions->mode == IGFGENERATE){
-        generate(argc, argv, appOptions->gameDir);
+        generate(appOptions);
     }
     else if(appOptions->mode == VERIFY){
         bool verificationResult = verify(appOptions->gameDir);
