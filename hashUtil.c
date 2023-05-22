@@ -45,10 +45,10 @@ void hash_dir(AppOptions* appOptions, char* outputFile){
     int igf_lines = 0;
     char* line = (char*)calloc(1024, sizeof(char));
     char **igf_filenames=NULL;
-    if (appOptions->v[3]==NULL){
-        if(strcmp(appOptions->v[3], "-igf")==0){
+    if (appOptions->argStr[3]==NULL){
+        if(strcmp(appOptions->argStr[3], "-igf")==0){
             printf("hashdir2\n");
-            FILE *igf_file = fopen(appOptions->v[4], "r");
+            FILE *igf_file = fopen(appOptions->argStr[4], "r");
             if(igf_file == NULL){
                 perror("Could not open file\n");
                 exit(1);
@@ -88,8 +88,8 @@ void hash_dir(AppOptions* appOptions, char* outputFile){
     struct dirent *entry;
     int ignore=0;
     while((entry = readdir(dir)) != NULL){   
-        for (int i=0;i<appOptions->c;i++) {
-             if (strcmp(entry->d_name, appOptions->v[i]) == 0){   
+        for (int i=0;i<appOptions->argCount;i++) {
+             if (strcmp(entry->d_name, appOptions->argStr[i]) == 0){   
                 ignore=1;
                  break; 
                  }

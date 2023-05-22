@@ -13,11 +13,11 @@ void appOptions(int argc, char** argv, AppOptions* appOptions){
                 "\nanticheat <game directory> -t DEV_KEY(For creating test directory, for dev purposes)\n");
         exit(1);
     }
-    appOptions->c=argc;
-    appOptions->v = (char**)calloc(argc,(sizeof(char**)));
+    appOptions->argCount=argc;
+    appOptions->argStr = (char**)calloc(argc,(sizeof(char**)));
     for (int i=0;i<argc;i++) {
-        appOptions->v[i] = (char*)calloc(strlen(argv[i]),(sizeof(char)));
-        strcpy(appOptions->v[i],argv[i]);
+        appOptions->argStr[i] = (char*)calloc(strlen(argv[i]),(sizeof(char)));
+        strcpy(appOptions->argStr[i],argv[i]);
     }
     appOptions->gameDir = argv[1];
     for(int i = 0; i < argc; i++){
