@@ -6,12 +6,18 @@
 #include "hashUtil.h"
 #define VERIFICATION_FILE "verification.txt"
 
-void appOptions(int argc, char** argv, AppOptions* appOptions){
+void appOptions(int argc, char** argv, AppOptions* appOptions){   
     if(argc < 2){
         perror("Usage:\n anticheat <game directory> -v(for verifying game files)"
                 "\nanticheat <game directory> -g(For generating verification files)\n"
                 "\nanticheat <game directory> -t DEV_KEY(For creating test directory, for dev purposes)\n");
         exit(1);
+    }
+    appOptions->argCount=argc;
+    appOptions->args = (char**)calloc(argc,(sizeof(char**)));
+    for (int i=0;i<argc;i++) {
+        appOptions->args[i] = (char*)calloc(strlen(argv[i]),(sizeof(char)));
+        strcpy(appOptions->args[i],argv[i]);
     }
     appOptions->gameDir = argv[1];
     for(int i = 0; i < argc; i++){
@@ -20,15 +26,16 @@ void appOptions(int argc, char** argv, AppOptions* appOptions){
         }
         else if(strcmp(argv[i], "-g") == 0){
             appOptions->mode = GENERATE;
-        } else if(strcmp(argv[i], "-t") == 0){
-            appOptions->mode = TEST;
+        } 
+        else if(strcmp(argv[i], "-igf")==0){
+            appOptions->mode = IGFGENERATE;
         }
     }
     //test rebasing, hello nehal
 }
 
-void generate(char *gameDir){
-    hash_dir(gameDir, VERIFICATION_FILE);
+void generate(AppOptions* appOptions){   
+    hash_dir(appOptions, VERIFICATION_FILE);
     //Test rebasing
 }
 
@@ -37,8 +44,8 @@ bool verify(char *gameDir){
 }
 
 void start(AppOptions* appOptions){
-    if(appOptions->mode == GENERATE){
-        generate(appOptions->gameDir);
+    if(appOptions->mode == GENERATE || appOptions->mode == IGFGENERATE){
+        generate(appOptions);
     }
     else if(appOptions->mode == VERIFY){
         bool verificationResult = verify(appOptions->gameDir);
@@ -47,8 +54,6 @@ void start(AppOptions* appOptions){
         } else {
             printf("Verification failed\n");
         }
-    } else if(appOptions->mode == TEST){
-        create_test_dir("benchmarkTests");
     } else {
         perror("Invalid mode\n");
         exit(1);
