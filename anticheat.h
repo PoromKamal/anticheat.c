@@ -7,7 +7,7 @@
 typedef struct AppOptions{
     char* gameDir;
     int argCount;
-    char **argStr;
+    char **args;
     int mode; //0 - generateVerifictaionFile, 1 - checkVerificationFile
 }AppOptions;
 //Create a AppOptions struct with arguments passed by the user

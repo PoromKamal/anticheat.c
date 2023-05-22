@@ -14,10 +14,10 @@ void appOptions(int argc, char** argv, AppOptions* appOptions){
         exit(1);
     }
     appOptions->argCount=argc;
-    appOptions->argStr = (char**)calloc(argc,(sizeof(char**)));
+    appOptions->args = (char**)calloc(argc,(sizeof(char**)));
     for (int i=0;i<argc;i++) {
-        appOptions->argStr[i] = (char*)calloc(strlen(argv[i]),(sizeof(char)));
-        strcpy(appOptions->argStr[i],argv[i]);
+        appOptions->args[i] = (char*)calloc(strlen(argv[i]),(sizeof(char)));
+        strcpy(appOptions->args[i],argv[i]);
     }
     appOptions->gameDir = argv[1];
     for(int i = 0; i < argc; i++){

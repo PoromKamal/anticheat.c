@@ -45,10 +45,8 @@ void hash_dir(AppOptions* appOptions, char* outputFile){
     int igf_lines = 0;
     char* line = (char*)calloc(1024, sizeof(char));
     char **igf_filenames=NULL;
-    if (appOptions->argStr[3]==NULL){
-        if(strcmp(appOptions->argStr[3], "-igf")==0){
-            printf("hashdir2\n");
-            FILE *igf_file = fopen(appOptions->argStr[4], "r");
+        if(appOptions->mode == IGFGENERATE){
+            FILE *igf_file = fopen(appOptions->args[4], "r");
             if(igf_file == NULL){
                 perror("Could not open file\n");
                 exit(1);
@@ -70,7 +68,6 @@ void hash_dir(AppOptions* appOptions, char* outputFile){
             }
             fclose(igf_file);
         }
-    }
     DIR *dir = opendir(appOptions->gameDir);
     if(dir == NULL){
         perror("Could not open directory\n");
@@ -89,10 +86,10 @@ void hash_dir(AppOptions* appOptions, char* outputFile){
     int ignore=0;
     while((entry = readdir(dir)) != NULL){   
         for (int i=0;i<appOptions->argCount;i++) {
-             if (strcmp(entry->d_name, appOptions->argStr[i]) == 0){   
+            if (strcmp(entry->d_name, appOptions->args[i]) == 0){   
                 ignore=1;
-                 break; 
-                 }
+                break; 
+            }
         }
         for (int i=0;i<igf_lines;i++) {
             if (strcmp(entry->d_name, igf_filenames[i]) == 0){   
