@@ -44,30 +44,30 @@ char* hash_file(char* filename){
 void hash_dir(AppOptions* appOptions, char* outputFile){ 
     int igf_lines = 0;
     char* line = (char*)calloc(1024, sizeof(char));
-    char **igf_filenames=NULL;
-        if(appOptions->mode == IGFGENERATE){
-            FILE *igf_file = fopen(appOptions->args[4], "r");
-            if(igf_file == NULL){
-                perror("Could not open file\n");
-                exit(1);
-            }
-            while(fgets(line, 1024, igf_file) != NULL && strcmp(line, "===\n") != 0){
-                igf_lines++;
-            }
-            igf_filenames = (char**)calloc(igf_lines,sizeof(char*));
-            rewind(igf_file);
-            int igf_counter = 0;
-            while (fgets(line, 1024, igf_file) != NULL && strcmp(line, "===\n") != 0) {
-                if (line[0]=="===\n") {
-                    continue;
-                }
-                igf_filenames[igf_counter] = strdup(line);
-                int curr_filelen = strlen(igf_filenames[igf_counter]);
-                igf_filenames[igf_counter][curr_filelen-1] = '\0'; 
-                igf_counter ++;
-            }
-            fclose(igf_file);
+    char **igf_filenames;
+    if(appOptions->mode == IGFGENERATE){
+        FILE *igf_file = fopen(appOptions->args[4], "r");
+        if(igf_file == NULL){
+            perror("Could not open file\n");
+            exit(1);
         }
+        while(fgets(line, 1024, igf_file) != NULL && strcmp(line, "===\n") != 0){
+            igf_lines++;
+        }
+        igf_filenames = (char**)calloc(igf_lines,sizeof(char*));
+        rewind(igf_file);
+        int igf_counter = 0;
+        while (fgets(line, 1024, igf_file) != NULL && strcmp(line, "===\n") != 0) {
+            if (line[0]=="===\n") {
+                continue;
+            }
+            igf_filenames[igf_counter] = strdup(line);
+            int curr_filelen = strlen(igf_filenames[igf_counter]);
+            igf_filenames[igf_counter][curr_filelen-1] = '\0'; 
+            igf_counter ++;
+        }
+        fclose(igf_file);
+    }
     DIR *dir = opendir(appOptions->gameDir);
     if(dir == NULL){
         perror("Could not open directory\n");
