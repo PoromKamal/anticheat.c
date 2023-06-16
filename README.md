@@ -47,15 +47,15 @@ To build the tool.
 
 # Running Benchmarks
 To run timing benchmarks (For Multithreaded version only):
+(Run command first time only, requires around 100mb of space)
 ```
 ./timeBenchmark -setup
 ```
-(Run above command first time only, requires around 100mb of space)
-
+(Simply generates the expected hashes, performance wasn't considered at this step, so no multithreading)
 ```
 ./timeBenchmark -g
 ```
-(Simply generates the expected hashes, performance wasn't considered at this step, so no multithreading)
+(Now can time the verification step which is optimized)
 
 ```
 ./timeBenchmark -v
