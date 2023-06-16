@@ -3,9 +3,11 @@
 //Struct to decide how to run the app
 #define GENERATE 0
 #define VERIFY 1
-#define TEST 3
+#define IGFGENERATE 3
 typedef struct AppOptions{
     char* gameDir;
+    int argCount;
+    char **args;
     int mode; //0 - generateVerifictaionFile, 1 - checkVerificationFile
 }AppOptions;
 //Create a AppOptions struct with arguments passed by the user
