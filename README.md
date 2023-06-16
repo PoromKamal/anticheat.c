@@ -23,3 +23,5 @@ Summary:
 
 ![image](https://github.com/PoromKamal/anticheat.c/assets/62628923/aca42a91-137c-4b5b-8661-56124cc34c32)
 Carried LOL
+
+<sub><sup>jk proud of you lil bro <3 </sup></sub>
