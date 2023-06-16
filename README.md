@@ -62,7 +62,8 @@ To run timing benchmarks (For Multithreaded version only):
 ```
 # Look at this Nehal guy 💀
 
-![image](https://github.com/PoromKamal/anticheat.c/assets/62628923/aca42a91-137c-4b5b-8661-56124cc34c32)
-Carried LOL
+![image](https://github.com/PoromKamal/anticheat.c/assets/62628923/90d31fe8-df13-48a8-ada7-fc6240060856)
+
+Bro is in my backpack 😭
 
 <sub><sup>jk proud of you lil bro <3 </sup></sub>
