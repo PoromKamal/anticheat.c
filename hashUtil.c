@@ -6,6 +6,7 @@
 #include <pthread.h>
 #include <dirent.h>
 #include "hashUtil.h"
+#include "anticheat.h"
 #define MAX_FILE_PATH 256
 #define THREAD_DIVISOR 50
 
@@ -76,9 +77,35 @@ void *compare_hashes_helper(void* args){
 }
 
 // Hash every file in this directory, and write output to a file output
-void hash_dir(char* dirName, char* outputFile){
-    //Open the directory
-    DIR *dir = opendir(dirName);
+////////////////////////////////////////////////////////////////////////////////////////////
+void hash_dir(AppOptions* appOptions, char* outputFile){ 
+    int igf_lines = 0;
+    char* line = (char*)calloc(1024, sizeof(char));
+    char **igf_filenames;
+    if(appOptions->mode == IGFGENERATE){
+        FILE *igf_file = fopen(appOptions->args[4], "r");
+        if(igf_file == NULL){
+            perror("Could not open file\n");
+            exit(1);
+        }
+        while(fgets(line, 1024, igf_file) != NULL && strcmp(line, "===\n") != 0){
+            igf_lines++;
+        }
+        igf_filenames = (char**)calloc(igf_lines,sizeof(char*));
+        rewind(igf_file);
+        int igf_counter = 0;
+        while (fgets(line, 1024, igf_file) != NULL && strcmp(line, "===\n") != 0) {
+            if (line[0]=="===\n") {
+                continue;
+            }
+            igf_filenames[igf_counter] = strdup(line);
+            int curr_filelen = strlen(igf_filenames[igf_counter]);
+            igf_filenames[igf_counter][curr_filelen-1] = '\0'; 
+            igf_counter ++;
+        }
+        fclose(igf_file);
+    }
+    DIR *dir = opendir(appOptions->gameDir);
     if(dir == NULL){
         perror("Could not open directory\n");
         exit(1);
@@ -93,14 +120,30 @@ void hash_dir(char* dirName, char* outputFile){
 
     //Iterate through the directory
     struct dirent *entry;
-    while((entry = readdir(dir)) != NULL){
-        //Ignore the current directory, and parent directory
+    int ignore=0;
+    while((entry = readdir(dir)) != NULL){   
+        for (int i=0;i<appOptions->argCount;i++) {
+            if (strcmp(entry->d_name, appOptions->args[i]) == 0){   
+                ignore=1;
+                break; 
+            }
+        }
+        for (int i=0;i<igf_lines;i++) {
+            if (strcmp(entry->d_name, igf_filenames[i]) == 0){   
+                ignore=1;
+                break; 
+            }
+        }
+        if (ignore == 1){
+            ignore = 0;
+            continue;
+        }
         if(strcmp(entry->d_name, ".") == 0 || strcmp(entry->d_name, "..") == 0){
             continue;
         }
         //Create the full path to the file
-        char *fullPath = (char*)calloc(strlen(dirName)+strlen(entry->d_name)+2, sizeof(char));
-        strcat(fullPath, dirName);
+        char *fullPath = (char*)calloc(strlen(appOptions->gameDir)+strlen(entry->d_name)+2, sizeof(char));
+        strcat(fullPath, appOptions->gameDir);
         strcat(fullPath, "/");
         strcat(fullPath, entry->d_name);
 
@@ -120,6 +163,7 @@ void hash_dir(char* dirName, char* outputFile){
     //Close the output file
     fclose(fp);
 }
+    
 
 void print_result(hash_func_result* res){
     printf("Failed Files:\n");
