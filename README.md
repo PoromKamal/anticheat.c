@@ -1,5 +1,6 @@
 # anticheat.c ⚡
 Lightweight performant anti-cheat written in C.
+
 File verification tool which performs over 62% faster than standard file verification protocol by 
 leveraging multi-threading.
 
