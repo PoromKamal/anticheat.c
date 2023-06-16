@@ -17,7 +17,7 @@ anticheat.c threaded DFS and Hash time benchmark:
 
 Summary:
 
-62+% increase in performance for large file systems
+62%+ increase in performance for large file systems
 
 # Usage
 1. To generate expected hashes (first time setup)
