@@ -60,7 +60,7 @@ void start(AppOptions* appOptions){
     }
 }
 
-//Creates a test directory for testing purposes, with 100 files, with 10 mb each
+//Creates a test directory for testing purposes, with 100 files, with 5 mb each
 void create_test_dir(char* dir_name){
     char command[100];
     sprintf(command, "mkdir %s", dir_name);
