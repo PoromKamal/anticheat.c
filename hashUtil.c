@@ -7,7 +7,7 @@
 #include <dirent.h>
 #include "hashUtil.h"
 #define MAX_FILE_PATH 256
-#define THREAD_DIVISOR 50
+#define THREAD_DIVISOR 25
 
 // This function is used to generate a hash for a file
 char* hash_file(char* filename){
@@ -71,7 +71,7 @@ void *compare_hashes_helper(void* args){
     res->failedFileNames = failingFileNames;
     res->failedFileNamesLen = failingFileNamesLen;
     free(func_args->game_dir);
-    free(func_args);
+    //free(func_args);
     pthread_exit((void*)res);
 }
 
@@ -199,8 +199,6 @@ bool compare_hashes(char* game_dir, char* verificationFile){
     for(int i = 0; i < numThreads; i ++){
         hash_func_result *res;
         pthread_join(threads[i], (void**)&res);
-        print_result(res);
-        
         //Check if any files failed
         if(res->failedFileNamesLen > 0){
             for(int j = 0; j < res->failedFileNamesLen; j ++){
