@@ -5,6 +5,8 @@
 #Test verification files
 verification.txt
 
+/benchmarkTests
+
 #dev exec files
 anticheat-dev
 

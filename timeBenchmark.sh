@@ -5,7 +5,11 @@ then
     exit 1
 fi
 
-if [ $1 == "-v" ]
+if [ $1 == "-setup" ] # Create a large directory to test on
+then
+    echo "Setting up time bench"
+    time ./anticheat-dev doesntMatter -t
+elif [ $1 == "-v" ]
 then
     echo "Running time benchmark for verifying files."
     time ./anticheat-dev benchmarkTests -v
