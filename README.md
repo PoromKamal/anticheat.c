@@ -32,7 +32,8 @@ and ship with the verification.txt file
 ```
 anticheat-dev <game_directory> -v
 ```
-Will exit with signal
+Will exit with signal:
+
 0 - Verification Success
 3 - Unsuccessful (Tampered files)
 
