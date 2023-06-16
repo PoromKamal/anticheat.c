@@ -55,7 +55,7 @@ To run timing benchmarks (For Multithreaded version only):
 ```
 ./timeBenchmark -g
 ```
-(Now can time the verification step, which is threaded, and optimized)
+(Now can time the verification step, which is threaded)
 
 ```
 ./timeBenchmark -v
