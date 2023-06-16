@@ -19,5 +19,7 @@ Summary:
 
 62+% increase in performance for large file systems
 
+# Look at this Nehal guy 💀
+
 ![image](https://github.com/PoromKamal/anticheat.c/assets/62628923/aca42a91-137c-4b5b-8661-56124cc34c32)
 Carried LOL
