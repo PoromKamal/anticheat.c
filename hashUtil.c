@@ -58,7 +58,7 @@ void hash_dir(AppOptions* appOptions, char* outputFile){
         rewind(igf_file);
         int igf_counter = 0;
         while (fgets(line, 1024, igf_file) != NULL && strcmp(line, "===\n") != 0) {
-            if (strcmp(line[0], "===\n") == 0) {
+            if (strcmp(line, "===\n") == 0) {
                 continue;
             }
             igf_filenames[igf_counter] = strdup(line);
