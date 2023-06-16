@@ -32,7 +32,7 @@ and ship with the verification.txt file
 ```
 anticheat-dev <game_directory> -v
 ```
-Will exit with signal:
+Will exit with code:
 
 0 - Verification Success
 
